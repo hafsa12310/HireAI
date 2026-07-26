@@ -1,0 +1,36 @@
+<h1>Analysis Result</h1>
+
+<h2>Match Score: {{ result.match_score }}%</h2>
+
+<p><strong>Summary:</strong> {{ result.summary }}</p>
+
+<h3>Matched Skills</h3>
+<ul>
+  {% for skill in result.matched_skills %}
+    <li>{{ skill }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Missing Skills</h3>
+<ul>
+  {% for skill in result.missing_skills %}
+    <li>{{ skill }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Resume Improvements</h3>
+<ul>
+  {% for item in result.resume_improvements %}
+    <li>{{ item }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Interview Questions</h3>
+<ul>
+  {% for question in result.interview_questions %}
+    <li>{{ question }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Recommendation</h3>
+<p>{{ result.final_recommendation }}</p>
