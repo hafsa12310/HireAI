@@ -145,7 +145,7 @@ export function Step4Results({ results, onReset }: Step4ResultsProps) {
       {/* Header & Score Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-1 bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-violet-500 to-fuchsia-500"></div>
           <h3 className="text-slate-400 font-medium mb-6">Match Score</h3>
 
           <div className="relative w-40 h-40 flex items-center justify-center">
@@ -306,7 +306,7 @@ export function Step4Results({ results, onReset }: Step4ResultsProps) {
       </div>
 
       {/* Recommendations */}
-      <div className="bg-gradient-to-br from-violet-900/40 to-slate-900 border border-violet-500/30 rounded-2xl p-8">
+      <div className="bg-linear-to-br from-violet-900/40 to-slate-900 border border-violet-500/30 rounded-2xl p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
             <ClipboardCheck className="w-6 h-6 text-violet-300" />

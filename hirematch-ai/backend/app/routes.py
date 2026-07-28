@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, current_app, jsonify, render_template, request
 from app.services.resume_parser import extract_pdf_text
 from app.services.ai_analyzer import analyze_resume
 
@@ -28,13 +28,6 @@ def format_analysis_response(result):
     }
 
 
-@main.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
-    return response
-
 @main.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -62,7 +55,24 @@ def analyze():
     if not resume_file or not job_description:
         return jsonify({"error": "resume and job_description are required"}), 400
 
-    resume_text = extract_pdf_text(resume_file)
-    result = analyze_resume(resume_text, job_description, model)
+    try:
+        resume_text = extract_pdf_text(resume_file)
+        result = analyze_resume(resume_text, job_description, model)
+    except Exception:
+        current_app.logger.exception("Resume analysis failed")
+        return jsonify({
+            "error": (
+                "The AI model could not generate an analysis right now. "
+                "Please wait a moment and try again."
+            )
+        }), 502
+
+    if not isinstance(result, dict) or not result:
+        return jsonify({
+            "error": (
+                "The AI model returned an incomplete response. "
+                "Please try again."
+            )
+        }), 502
 
     return jsonify(format_analysis_response(result))

@@ -46,7 +46,7 @@ export function Step2JobDesc({
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             placeholder="Paste the job description here..."
-            className="w-full h-80 bg-slate-950 border border-slate-800 rounded-xl py-4 pl-12 pr-4 text-slate-200 placeholder:text-slate-600 focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 outline-none resize-none transition-all"
+            className="w-full h-80 bg-slate-950 border focus:border-violet-500 rounded-xl py-4 pl-12 pr-4 placeholder:text-slate-600 focus:ring-2 focus:ring-violet-500/50 outline-none resize-none transition-all"
           />
         </div>
 
@@ -61,7 +61,7 @@ export function Step2JobDesc({
           <button
             onClick={onNext}
             disabled={jobDescription.trim().length < 50}
-            className="px-8 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:hover:bg-violet-600 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] disabled:shadow-none"
+            className="px-8 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:hover:bg-violet-600 text-white rounded-xl font-semibold transition-all flex items-center gap-2 hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] disabled:shadow-none"
           >
             Analyze Match
             <ChevronRight className="w-5 h-5" />

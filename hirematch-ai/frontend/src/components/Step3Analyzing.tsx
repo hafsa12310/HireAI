@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, FileSearch, BrainCircuit, Target } from 'lucide-react'
+import {
+  Sparkles,
+  FileSearch,
+  BrainCircuit,
+  Target,
+  AlertTriangle,
+  RotateCcw,
+  ChevronLeft,
+} from 'lucide-react'
 const loadingSteps = [
   {
     icon: FileSearch,
@@ -19,23 +27,77 @@ const loadingSteps = [
     text: 'Generating actionable insights...',
   },
 ]
-export function Step3Analyzing() {
+interface Step3AnalyzingProps {
+  error: string | null
+  onRetry: () => void
+  onBack: () => void
+}
+
+export function Step3Analyzing({
+  error,
+  onRetry,
+  onBack,
+}: Step3AnalyzingProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   useEffect(() => {
-  const stepDuration = 1500
+    if (error) return
 
-  const interval = setInterval(() => {
-    setCurrentStepIndex((prev) => {
-      if (prev < loadingSteps.length - 1) {
-        return prev + 1
-      }
+    const stepDuration = 1500
 
-      return prev
-    })
-  }, stepDuration)
+    const interval = setInterval(() => {
+      setCurrentStepIndex((prev) => {
+        if (prev < loadingSteps.length - 1) {
+          return prev + 1
+        }
 
-  return () => clearInterval(interval)
-}, [])
+        return prev
+      })
+    }, stepDuration)
+
+    return () => clearInterval(interval)
+  }, [error])
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-lg mx-auto py-12"
+        role="alert"
+      >
+        <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-8 text-center shadow-xl">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-red-500/10 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-red-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">
+            We couldn&apos;t generate your analysis
+          </h2>
+          <p className="text-slate-400 mb-8">
+            {error} Your resume and job description are still available, so you
+            can try again or go back and review them.
+          </p>
+          <div className="flex flex-col-reverse sm:flex-row gap-3 justify-center">
+            <button
+              type="button"
+              onClick={onBack}
+              className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              Review details
+            </button>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              <RotateCcw className="w-5 h-5" />
+              Try again
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
   return (
     <motion.div
       initial={{

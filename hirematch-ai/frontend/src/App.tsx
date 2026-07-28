@@ -15,36 +15,55 @@ export function App() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
     null,
   )
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
   const [selectedModel] = useState('granite')
   const handleReset = () => {
     setStep(1)
     setFile(null)
     setJobDescription('')
+    setAnalysisResult(null)
+    setAnalysisError(null)
   }
   const analyzeResume = async () => {
-  if (!file || !jobDescription) return
+    if (!file || !jobDescription) return
 
-  setStep(3)
+    setAnalysisError(null)
+    setStep(3)
 
-  const formData = new FormData()
-  formData.append('resume', file)
-  formData.append('job_description', jobDescription)
-  formData.append('model', selectedModel)
+    const formData = new FormData()
+    formData.append('resume', file)
+    formData.append('job_description', jobDescription)
+    formData.append('model', selectedModel)
 
-  try {
-    const response = await fetch('http://127.0.0.1:5000/analyze', {
-      method: 'POST',
-      body: formData,
-    })
+    try {
+      const API_URL =
+        import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:5000'
+      const response = await fetch(`${API_URL}/analyze`, {
+        method: 'POST',
+        body: formData,
+      })
 
-    const data = await response.json()
+      const data = await response.json().catch(() => null)
 
-    setAnalysisResult(data)
-    setStep(4)
-  } catch (error) {
-    console.error('Analysis failed:', error)
+      if (!response.ok) {
+        throw new Error(data?.error || 'The analysis request failed.')
+      }
+
+      if (!data || typeof data.score !== 'number' || !data.summary) {
+        throw new Error('The AI model did not return a complete analysis.')
+      }
+
+      setAnalysisResult(data)
+      setStep(4)
+    } catch (error) {
+      console.error('Analysis failed:', error)
+      setAnalysisError(
+        error instanceof Error && error.message
+          ? error.message
+          : 'We could not generate your analysis. Please try again.',
+      )
+    }
   }
-}
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation */}
@@ -93,7 +112,16 @@ export function App() {
               onBack={() => setStep(1)}
             />
           )}
-          {step === 3 && <Step3Analyzing />}
+          {step === 3 && (
+            <Step3Analyzing
+              error={analysisError}
+              onRetry={analyzeResume}
+              onBack={() => {
+                setAnalysisError(null)
+                setStep(2)
+              }}
+            />
+          )}
           {step === 4 && (
             analysisResult && (
               <Step4Results results={analysisResult} onReset={handleReset} />

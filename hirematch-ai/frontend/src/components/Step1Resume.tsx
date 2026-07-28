@@ -90,7 +90,7 @@ export function Step1Resume({ file, setFile, onNext }: Step1ResumeProps) {
                 <FileText className="w-6 h-6 text-violet-400" />
               </div>
               <div>
-                <p className="text-slate-200 font-medium truncate max-w-[300px]">
+                <p className="text-slate-200 font-medium truncate max-w-75">
                   {file.name}
                 </p>
                 <p className="text-slate-500 text-sm">
