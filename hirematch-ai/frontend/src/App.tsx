@@ -80,7 +80,7 @@ export function App() {
               HireAI
             </span>
           </div>
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <button className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
               History
             </button>
@@ -88,7 +88,7 @@ export function App() {
               Settings
             </button>
             <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700"></div>
-          </div>
+          </div> */}
         </div>
       </header>
 
