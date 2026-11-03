@@ -2,7 +2,7 @@
 
 HireAI is an AI-powered resume-to-job matching application that compares a candidate's PDF resume with a job description to generate a match score, skills analysis, resume improvement suggestions, interview questions, and an overall hiring recommendation.
 
-Built with **React**, **Flask**, and **IBM watsonx.ai**.
+Built with **React**, **Flask**, and **Groq** (running OpenAI's open-weight `gpt-oss` models).
 
 > **Live Demo:** https://hirematch.hafsa-172001.workers.dev/
 
@@ -35,7 +35,7 @@ Built with **React**, **Flask**, and **IBM watsonx.ai**.
 - Python
 - Flask
 - LangChain
-- IBM watsonx.ai
+- Groq API (`openai/gpt-oss-120b`, with automatic fallback to `openai/gpt-oss-20b`)
 - pypdf
 
 ### Deployment
@@ -56,7 +56,7 @@ React Frontend
 Flask API
    │
    ├── Extract Resume Text
-   ├── Send Resume + Job Description to watsonx.ai
+   ├── Send Resume + Job Description to Groq LLM
    ▼
 AI Analysis
    ▼
@@ -91,6 +91,17 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python run.py
+```
+
+Create a `backend/.env` file:
+
+```env
+GROQ_API_KEY=your_groq_api_key        # free at https://console.groq.com/keys
+FLASK_SECRET_KEY=your_secret_key
+FRONTEND_URL=http://localhost:5173
+# Optional overrides
+GROQ_MODEL=openai/gpt-oss-120b
+GROQ_FALLBACK_MODEL=openai/gpt-oss-20b
 ```
 
 ### Frontend
@@ -131,6 +142,7 @@ curl -X POST http://127.0.0.1:5000/analyze \
 Root: backend
 Build: pip install -r requirements.txt
 Start: gunicorn run:app
+Env:   GROQ_API_KEY, FLASK_SECRET_KEY, FRONTEND_URL
 ```
 
 ### Frontend (Cloudflare Pages)
