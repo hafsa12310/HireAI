@@ -10,14 +10,20 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 
     # Enable CORS
-    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    # FRONTEND_URL may be a comma-separated list; trailing slashes are stripped
+    # because the browser's Origin header never includes one
+    frontend_urls = [
+        url.strip().rstrip("/")
+        for url in os.getenv("FRONTEND_URL", "").split(",")
+        if url.strip()
+    ]
 
     CORS(
       app,
       resources={
           r"/*": {
               "origins": [
-                  frontend_url,
+                  *frontend_urls,
                   "http://localhost:5173",
               ]
           }
